@@ -84,7 +84,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className="p-4 border-t border-border">
             <div className="mb-3 px-3">
               <p className="text-sm font-medium text-foreground">{user?.email}</p>
-              <p className="text-xs text-muted-foreground capitalize">{user?.role.toLowerCase()}</p>
+              <p className="text-xs text-muted-foreground capitalize">{user?.role?.toLowerCase()}</p>
             </div>
             <Button
               variant="outline"

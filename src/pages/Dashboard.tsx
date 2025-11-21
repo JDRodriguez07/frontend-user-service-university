@@ -53,7 +53,7 @@ export default function Dashboard() {
             Welcome back, {user?.email?.split('@')[0]}!
           </h1>
           <p className="text-muted-foreground mt-1">
-            You're logged in as <span className="font-medium text-foreground capitalize">{user?.role.toLowerCase()}</span>
+            You're logged in as <span className="font-medium text-foreground capitalize">{user?.role?.toLowerCase()}</span>
           </p>
         </div>
 

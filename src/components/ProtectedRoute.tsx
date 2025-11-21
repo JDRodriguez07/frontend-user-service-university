@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  allowedRoles?: ('ADMIN' | 'STUDENT' | 'TEACHER')[];
+  allowedRoles?: ('ROLE_ADMIN' | 'ROLE_STUDENT' | 'ROLE_TEACHER')[];
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles }) => {
@@ -23,6 +23,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowe
   if (!isAuthenticated) {
     return <Navigate to="/auth/login" replace />;
   }
+
+  console.log(allowedRoles)
+  console.log(user)
 
   if (allowedRoles && user && !allowedRoles.includes(user.role)) {
     return (

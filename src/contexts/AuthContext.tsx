@@ -56,6 +56,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     tokenManager.setToken(response.token);
     
     const decoded = jwtDecode<JWTPayload>(response.token);
+    console.log(decoded)
     setUser({
       id: 0,
       email: decoded.sub,

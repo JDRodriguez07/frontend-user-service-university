@@ -43,24 +43,24 @@ const App = () => (
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             
             <Route path="/users" element={<ProtectedRoute><UsersList /></ProtectedRoute>} />
-            <Route path="/users/create" element={<ProtectedRoute allowedRoles={['ADMIN']}><CreateUser /></ProtectedRoute>} />
+            <Route path="/users/create" element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']}><CreateUser /></ProtectedRoute>} />
             <Route path="/users/:id" element={<ProtectedRoute><UserDetail /></ProtectedRoute>} />
-            <Route path="/users/:id/edit" element={<ProtectedRoute allowedRoles={['ADMIN']}><EditUser /></ProtectedRoute>} />
+            <Route path="/users/:id/edit" element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']}><EditUser /></ProtectedRoute>} />
             
             <Route path="/students" element={<ProtectedRoute><StudentsList /></ProtectedRoute>} />
-            <Route path="/students/create" element={<ProtectedRoute allowedRoles={['ADMIN']}><CreateStudent /></ProtectedRoute>} />
+            <Route path="/students/create" element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']}><CreateStudent /></ProtectedRoute>} />
             <Route path="/students/:id" element={<ProtectedRoute><StudentDetail /></ProtectedRoute>} />
-            <Route path="/students/:id/edit" element={<ProtectedRoute allowedRoles={['ADMIN']}><EditStudent /></ProtectedRoute>} />
+            <Route path="/students/:id/edit" element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']}><EditStudent /></ProtectedRoute>} />
             
             <Route path="/teachers" element={<ProtectedRoute><TeachersList /></ProtectedRoute>} />
-            <Route path="/teachers/create" element={<ProtectedRoute allowedRoles={['ADMIN']}><CreateTeacher /></ProtectedRoute>} />
+            <Route path="/teachers/create" element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']}><CreateTeacher /></ProtectedRoute>} />
             <Route path="/teachers/:id" element={<ProtectedRoute><TeacherDetail /></ProtectedRoute>} />
-            <Route path="/teachers/:id/edit" element={<ProtectedRoute allowedRoles={['ADMIN']}><EditTeacher /></ProtectedRoute>} />
+            <Route path="/teachers/:id/edit" element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']}><EditTeacher /></ProtectedRoute>} />
             
             <Route path="/administrators" element={<ProtectedRoute><AdministratorsList /></ProtectedRoute>} />
-            <Route path="/administrators/create" element={<ProtectedRoute allowedRoles={['ADMIN']}><CreateAdministrator /></ProtectedRoute>} />
+            <Route path="/administrators/create" element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']}><CreateAdministrator /></ProtectedRoute>} />
             <Route path="/administrators/:id" element={<ProtectedRoute><AdministratorDetail /></ProtectedRoute>} />
-            <Route path="/administrators/:id/edit" element={<ProtectedRoute allowedRoles={['ADMIN']}><EditAdministrator /></ProtectedRoute>} />
+            <Route path="/administrators/:id/edit" element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']}><EditAdministrator /></ProtectedRoute>} />
             
             <Route path="/search" element={<ProtectedRoute><Search /></ProtectedRoute>} />
             
