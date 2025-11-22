@@ -8,6 +8,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
 import UsersList from "./pages/Users/UsersList";
 import UserDetail from "./pages/Users/UserDetail";
 import CreateUser from "./pages/Users/CreateUser";
@@ -41,28 +42,29 @@ const App = () => (
             <Route path="/auth/login" element={<Login />} />
             
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             
-            <Route path="/users" element={<ProtectedRoute><UsersList /></ProtectedRoute>} />
+            <Route path="/users" element={<ProtectedRoute allowedRoles={['ADMIN']}><UsersList /></ProtectedRoute>} />
             <Route path="/users/create" element={<ProtectedRoute allowedRoles={['ADMIN']}><CreateUser /></ProtectedRoute>} />
-            <Route path="/users/:id" element={<ProtectedRoute><UserDetail /></ProtectedRoute>} />
+            <Route path="/users/:id" element={<ProtectedRoute allowedRoles={['ADMIN']}><UserDetail /></ProtectedRoute>} />
             <Route path="/users/:id/edit" element={<ProtectedRoute allowedRoles={['ADMIN']}><EditUser /></ProtectedRoute>} />
             
-            <Route path="/students" element={<ProtectedRoute><StudentsList /></ProtectedRoute>} />
+            <Route path="/students" element={<ProtectedRoute allowedRoles={['ADMIN']}><StudentsList /></ProtectedRoute>} />
             <Route path="/students/create" element={<ProtectedRoute allowedRoles={['ADMIN']}><CreateStudent /></ProtectedRoute>} />
-            <Route path="/students/:id" element={<ProtectedRoute><StudentDetail /></ProtectedRoute>} />
-            <Route path="/students/:id/edit" element={<ProtectedRoute allowedRoles={['ADMIN']}><EditStudent /></ProtectedRoute>} />
+            <Route path="/students/:id" element={<ProtectedRoute allowedRoles={['ADMIN', 'STUDENT']}><StudentDetail /></ProtectedRoute>} />
+            <Route path="/students/:id/edit" element={<ProtectedRoute allowedRoles={['ADMIN', 'STUDENT']}><EditStudent /></ProtectedRoute>} />
             
-            <Route path="/teachers" element={<ProtectedRoute><TeachersList /></ProtectedRoute>} />
+            <Route path="/teachers" element={<ProtectedRoute allowedRoles={['ADMIN']}><TeachersList /></ProtectedRoute>} />
             <Route path="/teachers/create" element={<ProtectedRoute allowedRoles={['ADMIN']}><CreateTeacher /></ProtectedRoute>} />
-            <Route path="/teachers/:id" element={<ProtectedRoute><TeacherDetail /></ProtectedRoute>} />
-            <Route path="/teachers/:id/edit" element={<ProtectedRoute allowedRoles={['ADMIN']}><EditTeacher /></ProtectedRoute>} />
+            <Route path="/teachers/:id" element={<ProtectedRoute allowedRoles={['ADMIN', 'TEACHER']}><TeacherDetail /></ProtectedRoute>} />
+            <Route path="/teachers/:id/edit" element={<ProtectedRoute allowedRoles={['ADMIN', 'TEACHER']}><EditTeacher /></ProtectedRoute>} />
             
-            <Route path="/administrators" element={<ProtectedRoute><AdministratorsList /></ProtectedRoute>} />
+            <Route path="/administrators" element={<ProtectedRoute allowedRoles={['ADMIN']}><AdministratorsList /></ProtectedRoute>} />
             <Route path="/administrators/create" element={<ProtectedRoute allowedRoles={['ADMIN']}><CreateAdministrator /></ProtectedRoute>} />
-            <Route path="/administrators/:id" element={<ProtectedRoute><AdministratorDetail /></ProtectedRoute>} />
+            <Route path="/administrators/:id" element={<ProtectedRoute allowedRoles={['ADMIN']}><AdministratorDetail /></ProtectedRoute>} />
             <Route path="/administrators/:id/edit" element={<ProtectedRoute allowedRoles={['ADMIN']}><EditAdministrator /></ProtectedRoute>} />
             
-            <Route path="/search" element={<ProtectedRoute><Search /></ProtectedRoute>} />
+            <Route path="/search" element={<ProtectedRoute allowedRoles={['ADMIN']}><Search /></ProtectedRoute>} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

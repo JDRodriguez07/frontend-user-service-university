@@ -1,7 +1,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { Layout } from '@/components/Layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, GraduationCap, BookOpen, Shield } from 'lucide-react';
+import { Users, GraduationCap, BookOpen, Shield, UserRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,7 +10,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const isAdmin = user?.role === 'ADMIN';
 
-  const stats = [
+  const adminStats = [
     {
       title: 'Users',
       description: 'Manage all users',
@@ -45,6 +45,19 @@ export default function Dashboard() {
     },
   ];
 
+  const memberStats = [
+    {
+      title: 'My Profile',
+      description: 'View and edit your information',
+      icon: UserRound,
+      value: 'Open',
+      onClick: () => navigate('/profile'),
+      color: 'text-primary',
+    },
+  ];
+
+  const stats = isAdmin ? adminStats : memberStats;
+
   return (
     <Layout>
       <div className="space-y-6">
@@ -57,7 +70,7 @@ export default function Dashboard() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className={`grid gap-6 ${isAdmin ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4' : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3'}`}>
           {stats.map((stat) => (
             <Card key={stat.title} className="hover:shadow-lg transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -89,15 +102,15 @@ export default function Dashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Button 
-              variant="outline" 
-              className="w-full justify-start"
-              onClick={() => navigate('/search')}
-            >
-              Search for users, students, or teachers
-            </Button>
-            {isAdmin && (
+            {isAdmin ? (
               <>
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start"
+                  onClick={() => navigate('/search')}
+                >
+                  Search for users, students, or teachers
+                </Button>
                 <Button 
                   variant="outline" 
                   className="w-full justify-start"
@@ -113,6 +126,14 @@ export default function Dashboard() {
                   Add new teacher
                 </Button>
               </>
+            ) : (
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={() => navigate('/profile')}
+              >
+                Go to my profile
+              </Button>
             )}
           </CardContent>
         </Card>

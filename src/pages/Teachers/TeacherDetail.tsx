@@ -17,6 +17,7 @@ export default function TeacherDetail() {
   const { toast } = useToast();
   const { user } = useAuth();
   const isAdmin = user?.role === 'ADMIN';
+  const isTeacher = user?.role === 'TEACHER';
 
   useEffect(() => {
     if (id) {
@@ -28,6 +29,17 @@ export default function TeacherDetail() {
     try {
       setIsLoading(true);
       const data = await teachersAPI.getById(teacherId);
+
+      if (isTeacher && user?.id && data.id !== user.id) {
+        toast({
+          variant: 'destructive',
+          title: 'Access denied',
+          description: 'You can only view your own teacher record.',
+        });
+        navigate('/profile', { replace: true });
+        return;
+      }
+
       setTeacher(data);
     } catch (error: any) {
       toast({
@@ -35,7 +47,7 @@ export default function TeacherDetail() {
         title: 'Error',
         description: error.message || 'Failed to load teacher',
       });
-      navigate('/teachers');
+      navigate(isAdmin ? '/teachers' : '/profile', { replace: true });
     } finally {
       setIsLoading(false);
     }

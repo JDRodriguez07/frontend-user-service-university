@@ -8,6 +8,7 @@ import {
   BookOpen, 
   Shield, 
   Search,
+  UserRound,
   LogOut,
   Menu,
   X
@@ -25,11 +26,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const navItems = [
     { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', roles: ['ADMIN', 'STUDENT', 'TEACHER'] },
-    { to: '/users', icon: Users, label: 'Users', roles: ['ADMIN', 'STUDENT', 'TEACHER'] },
-    { to: '/students', icon: GraduationCap, label: 'Students', roles: ['ADMIN', 'STUDENT', 'TEACHER'] },
-    { to: '/teachers', icon: BookOpen, label: 'Teachers', roles: ['ADMIN', 'STUDENT', 'TEACHER'] },
-    { to: '/administrators', icon: Shield, label: 'Administrators', roles: ['ADMIN', 'STUDENT', 'TEACHER'] },
-    { to: '/search', icon: Search, label: 'Search', roles: ['ADMIN', 'STUDENT', 'TEACHER'] },
+    { to: '/profile', icon: UserRound, label: 'My Profile', roles: ['ADMIN', 'STUDENT', 'TEACHER'] },
+    { to: '/users', icon: Users, label: 'Users', roles: ['ADMIN'] },
+    { to: '/students', icon: GraduationCap, label: 'Students', roles: ['ADMIN'] },
+    { to: '/teachers', icon: BookOpen, label: 'Teachers', roles: ['ADMIN'] },
+    { to: '/administrators', icon: Shield, label: 'Administrators', roles: ['ADMIN'] },
+    { to: '/search', icon: Search, label: 'Search', roles: ['ADMIN'] },
   ];
 
   const filteredNavItems = navItems.filter(item => 

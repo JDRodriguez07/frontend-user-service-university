@@ -31,6 +31,7 @@ export interface Student {
   dni: string;
   name: string;
   lastName: string;
+  gender?: string;
   phoneNumber: string;
   address: string;
   email: string;
@@ -51,6 +52,7 @@ export interface Teacher {
   dni: string;
   name: string;
   lastName: string;
+  gender?: string;
   phoneNumber: string;
   address: string;
   email: string;
@@ -77,6 +79,35 @@ export interface Administrator {
   role: string;
   department: string;
   position: string;
+}
+
+export interface UserFullResponse {
+  id: number;
+  email: string;
+  status: string;
+  role: string;
+  documentType?: string;
+  dni?: string;
+  name?: string;
+  lastName?: string;
+  gender?: string;
+  birthDate?: string;
+  phoneNumber?: string;
+  address?: string;
+  adminCode?: string;
+  department?: string;
+  position?: string;
+  teacherCode?: string;
+  specialization?: string;
+  academicDegree?: string;
+  contractType?: string;
+  hireDate?: string;
+  studentCode?: string;
+  admissionDate?: string;
+  graduationDate?: string;
+  gpa?: number;
+  career?: string;
+  studentStatus?: string;
 }
 
 export interface CreateStudentRequest {
@@ -221,6 +252,20 @@ export const usersAPI = {
   search: async (value: string): Promise<any> => {
     const response = await fetchWithAuth(`/users/search?value=${encodeURIComponent(value)}`);
     return response.json();
+  },
+
+  // Fetch full profile of current authenticated user (fallback to /users/me if /users/profile is unavailable)
+  getProfile: async (): Promise<UserFullResponse> => {
+    const fetchProfile = async (path: string) => {
+      const response = await fetchWithAuth(path);
+      return response.json();
+    };
+
+    try {
+      return await fetchProfile('/users/profile');
+    } catch (err) {
+      return await fetchProfile('/users/me');
+    }
   },
 };
 

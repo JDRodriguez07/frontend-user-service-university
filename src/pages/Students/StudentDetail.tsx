@@ -17,6 +17,7 @@ export default function StudentDetail() {
   const { toast } = useToast();
   const { user } = useAuth();
   const isAdmin = user?.role === 'ADMIN';
+  const isStudent = user?.role === 'STUDENT';
 
   useEffect(() => {
     if (id) {
@@ -28,6 +29,17 @@ export default function StudentDetail() {
     try {
       setIsLoading(true);
       const data = await studentsAPI.getById(studentId);
+
+      if (isStudent && user?.id && data.id !== user.id) {
+        toast({
+          variant: 'destructive',
+          title: 'Access denied',
+          description: 'You can only view your own student record.',
+        });
+        navigate('/profile', { replace: true });
+        return;
+      }
+
       setStudent(data);
     } catch (error: any) {
       toast({
@@ -35,7 +47,7 @@ export default function StudentDetail() {
         title: 'Error',
         description: error.message || 'Failed to load student',
       });
-      navigate('/students');
+      navigate(isAdmin ? '/students' : '/profile', { replace: true });
     } finally {
       setIsLoading(false);
     }

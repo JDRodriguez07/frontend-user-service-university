@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function EditStudent() {
   const { id } = useParams<{ id: string }>();
@@ -34,6 +35,10 @@ export default function EditStudent() {
   const [isLoadingData, setIsLoadingData] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'ADMIN';
+  const isStudent = user?.role === 'STUDENT';
+  const canEditAll = isAdmin;
 
   useEffect(() => {
     if (id) {
@@ -45,6 +50,15 @@ export default function EditStudent() {
     try {
       setIsLoadingData(true);
       const data = await studentsAPI.getById(studentId);
+      if (isStudent && user?.id && data.id !== user.id) {
+        toast({
+          variant: 'destructive',
+          title: 'Access denied',
+          description: 'You can only edit your own student profile.',
+        });
+        navigate('/profile', { replace: true });
+        return;
+      }
       setFormData({
         documentType: 'CC',
         dni: data.dni,
@@ -80,11 +94,18 @@ export default function EditStudent() {
     setIsLoading(true);
 
     try {
-      const payload = {
-        ...formData,
-        gpa: parseFloat(formData.gpa),
-        graduationDate: formData.graduationDate || null,
-      };
+      const payload = isAdmin
+        ? {
+            ...formData,
+            gpa: parseFloat(formData.gpa),
+            graduationDate: formData.graduationDate || null,
+          }
+        : {
+            phoneNumber: formData.phoneNumber,
+            address: formData.address,
+            password: formData.password || undefined,
+            gender: formData.gender,
+          };
       await studentsAPI.update(parseInt(id!), payload);
       toast({
         title: 'Success',
@@ -138,6 +159,7 @@ export default function EditStudent() {
                   id="dni"
                   value={formData.dni}
                   onChange={(e) => setFormData({ ...formData, dni: e.target.value })}
+                  disabled={!canEditAll}
                   required
                 />
               </div>
@@ -148,6 +170,7 @@ export default function EditStudent() {
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  disabled={!canEditAll}
                   required
                 />
               </div>
@@ -157,6 +180,7 @@ export default function EditStudent() {
                   id="name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  disabled={!canEditAll}
                   required
                 />
               </div>
@@ -166,6 +190,7 @@ export default function EditStudent() {
                   id="lastName"
                   value={formData.lastName}
                   onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                  disabled={!canEditAll}
                   required
                 />
               </div>
@@ -211,6 +236,7 @@ export default function EditStudent() {
                   id="career"
                   value={formData.career}
                   onChange={(e) => setFormData({ ...formData, career: e.target.value })}
+                  disabled={!canEditAll}
                   required
                 />
               </div>
@@ -224,6 +250,7 @@ export default function EditStudent() {
                   max="5"
                   value={formData.gpa}
                   onChange={(e) => setFormData({ ...formData, gpa: e.target.value })}
+                  disabled={!canEditAll}
                   required
                 />
               </div>
@@ -234,6 +261,7 @@ export default function EditStudent() {
                   type="date"
                   value={formData.admissionDate}
                   onChange={(e) => setFormData({ ...formData, admissionDate: e.target.value })}
+                  disabled={!canEditAll}
                   required
                 />
               </div>
@@ -244,6 +272,7 @@ export default function EditStudent() {
                   type="date"
                   value={formData.graduationDate}
                   onChange={(e) => setFormData({ ...formData, graduationDate: e.target.value })}
+                  disabled={!canEditAll}
                 />
               </div>
               <div className="space-y-2">
@@ -251,6 +280,7 @@ export default function EditStudent() {
                 <Select
                   value={formData.studentStatus}
                   onValueChange={(value: any) => setFormData({ ...formData, studentStatus: value })}
+                  disabled={!canEditAll}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -267,6 +297,7 @@ export default function EditStudent() {
                 <Select
                   value={formData.status}
                   onValueChange={(value: any) => setFormData({ ...formData, status: value })}
+                  disabled={!canEditAll}
                 >
                   <SelectTrigger>
                     <SelectValue />

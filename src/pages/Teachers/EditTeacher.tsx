@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function EditTeacher() {
   const { id } = useParams<{ id: string }>();
@@ -33,6 +34,10 @@ export default function EditTeacher() {
   const [isLoadingData, setIsLoadingData] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'ADMIN';
+  const isTeacher = user?.role === 'TEACHER';
+  const canEditAll = isAdmin;
 
   useEffect(() => {
     if (id) {
@@ -44,6 +49,15 @@ export default function EditTeacher() {
     try {
       setIsLoadingData(true);
       const data = await teachersAPI.getById(teacherId);
+      if (isTeacher && user?.id && data.id !== user.id) {
+        toast({
+          variant: 'destructive',
+          title: 'Access denied',
+          description: 'You can only edit your own teacher profile.',
+        });
+        navigate('/profile', { replace: true });
+        return;
+      }
       setFormData({
         documentType: 'CC',
         dni: data.dni,
@@ -78,7 +92,15 @@ export default function EditTeacher() {
     setIsLoading(true);
 
     try {
-      await teachersAPI.update(parseInt(id!), formData);
+      const payload = isAdmin
+        ? formData
+        : {
+            phoneNumber: formData.phoneNumber,
+            address: formData.address,
+            password: formData.password || undefined,
+            gender: formData.gender,
+          };
+      await teachersAPI.update(parseInt(id!), payload as any);
       toast({
         title: 'Success',
         description: 'Teacher updated successfully',
@@ -131,6 +153,7 @@ export default function EditTeacher() {
                   id="dni"
                   value={formData.dni}
                   onChange={(e) => setFormData({ ...formData, dni: e.target.value })}
+                  disabled={!canEditAll}
                   required
                 />
               </div>
@@ -141,6 +164,7 @@ export default function EditTeacher() {
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  disabled={!canEditAll}
                   required
                 />
               </div>
@@ -150,6 +174,7 @@ export default function EditTeacher() {
                   id="name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  disabled={!canEditAll}
                   required
                 />
               </div>
@@ -159,6 +184,7 @@ export default function EditTeacher() {
                   id="lastName"
                   value={formData.lastName}
                   onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                  disabled={!canEditAll}
                   required
                 />
               </div>
@@ -204,6 +230,7 @@ export default function EditTeacher() {
                   id="specialization"
                   value={formData.specialization}
                   onChange={(e) => setFormData({ ...formData, specialization: e.target.value })}
+                  disabled={!canEditAll}
                   required
                 />
               </div>
@@ -212,6 +239,7 @@ export default function EditTeacher() {
                 <Select
                   value={formData.academicDegree}
                   onValueChange={(value: any) => setFormData({ ...formData, academicDegree: value })}
+                  disabled={!canEditAll}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -228,6 +256,7 @@ export default function EditTeacher() {
                 <Select
                   value={formData.contractType}
                   onValueChange={(value: any) => setFormData({ ...formData, contractType: value })}
+                  disabled={!canEditAll}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -246,6 +275,7 @@ export default function EditTeacher() {
                   type="date"
                   value={formData.hireDate}
                   onChange={(e) => setFormData({ ...formData, hireDate: e.target.value })}
+                  disabled={!canEditAll}
                   required
                 />
               </div>
@@ -254,6 +284,7 @@ export default function EditTeacher() {
                 <Select
                   value={formData.status}
                   onValueChange={(value: any) => setFormData({ ...formData, status: value })}
+                  disabled={!canEditAll}
                 >
                   <SelectTrigger>
                     <SelectValue />
