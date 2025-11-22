@@ -1,10 +1,20 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
+type NormalizedRole = 'ADMIN' | 'STUDENT' | 'TEACHER';
+type AllowedRole = NormalizedRole | `ROLE_${NormalizedRole}`;
+
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  allowedRoles?: ('ROLE_ADMIN' | 'ROLE_STUDENT' | 'ROLE_TEACHER')[];
+  allowedRoles?: AllowedRole[];
 }
+
+const normalizeRole = (role?: AllowedRole): NormalizedRole | undefined => {
+  if (!role) return undefined;
+  return role.startsWith('ROLE_')
+    ? (role.replace('ROLE_', '') as NormalizedRole)
+    : role;
+};
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles }) => {
   const { isAuthenticated, user, isLoading } = useAuth();
@@ -24,10 +34,10 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowe
     return <Navigate to="/auth/login" replace />;
   }
 
-  console.log(allowedRoles)
-  console.log(user)
+  const normalizedUserRole = normalizeRole(user?.role as AllowedRole | undefined);
+  const normalizedAllowedRoles = allowedRoles?.map((role) => normalizeRole(role));
 
-  if (allowedRoles && user && !allowedRoles.includes(user.role)) {
+  if (normalizedAllowedRoles && normalizedUserRole && !normalizedAllowedRoles.includes(normalizedUserRole)) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">

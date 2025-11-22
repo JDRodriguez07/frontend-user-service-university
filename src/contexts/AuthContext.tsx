@@ -12,9 +12,18 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+type RawRole = 'ADMIN' | 'STUDENT' | 'TEACHER' | 'ROLE_ADMIN' | 'ROLE_STUDENT' | 'ROLE_TEACHER';
+type NormalizedRole = 'ADMIN' | 'STUDENT' | 'TEACHER';
+
+const normalizeRole = (role: RawRole): NormalizedRole => {
+  return role.startsWith('ROLE_')
+    ? (role.replace('ROLE_', '') as NormalizedRole)
+    : role;
+};
+
 interface JWTPayload {
   sub: string; // email
-  role: 'ADMIN' | 'STUDENT' | 'TEACHER';
+  role: RawRole;
   exp: number;
   iat: number;
 }
@@ -40,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser({
           id: 0, // We don't have ID in JWT, will be fetched if needed
           email: decoded.sub,
-          role: decoded.role,
+          role: normalizeRole(decoded.role),
           status: 'ACTIVE',
         });
       } catch (error) {
@@ -56,11 +65,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     tokenManager.setToken(response.token);
     
     const decoded = jwtDecode<JWTPayload>(response.token);
-    console.log(decoded)
     setUser({
       id: 0,
       email: decoded.sub,
-      role: decoded.role,
+      role: normalizeRole(decoded.role),
       status: 'ACTIVE',
     });
   };
